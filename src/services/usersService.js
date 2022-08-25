@@ -20,6 +20,55 @@ const login = async ({ email, password }) => {
   return { code: 200, data: token };
 };
 
+// A criação de usuário acabou ficando muito longa, irei refatorar usando middlewares (por mais que não goste)
+// const create = async ({ displayName, email, password, image }) => {
+//   const regexEmail = /^[a-z0-9.]+@[a-z0-9]+\.[a-z]+$/i;
+//   if (displayName.length < 8) {
+//     return { code: 400, message: '"displayName" length must be at least 8 characters long' };
+//   }
+
+//   if (!regexEmail.test(email)) {
+//     return { code: 400, message: '"email" must be a valid email' };
+//   }
+
+//   if (password.length < 6) {
+//     return { code: 400, message: '"password" length must be at least 6 characters long' };
+//   }
+
+//   const findUser = await User.findOne({ where: { email } });
+
+//   if (findUser.length !== 0) {
+//     return { code: 409, message: 'User already registered' };
+//   }
+
+//   await User.create({ displayName, email, password, image });
+
+//   const jwtConfig = {
+//     expiresIn: '7d',
+//     algorithm: 'HS256',
+//   };
+
+//   const token = jwt.sign({ data: userLogin }, process.env.JWT_SECRET, jwtConfig);
+
+//   return { code: 200, data: token };
+// };
+
+const create = async ({ displayName, email, password, image }) => {
+    await User.create({ displayName, email, password, image });
+
+    const jwtConfig = {
+    expiresIn: '7d',
+    algorithm: 'HS256',
+    };
+
+    const userLogin = await User.findOne({ where: { email } });
+
+    const token = jwt.sign({ data: userLogin }, process.env.JWT_SECRET, jwtConfig);
+
+    return { code: 201, data: token };
+};
+
 module.exports = {
   login,
+  create,
 };
