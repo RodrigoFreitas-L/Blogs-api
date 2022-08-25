@@ -15,9 +15,9 @@ const login = async ({ email, password }) => {
     algorithm: 'HS256',
   };
 
-  const token = jwt.sign({ data: userLogin }, process.env.JWT_SECRET, jwtConfig);
+  const token = jwt.sign({ email }, process.env.JWT_SECRET, jwtConfig);
 
-  return { code: 200, data: token };
+  return { code: 200, token };
 };
 
 // A criação de usuário acabou ficando muito longa, irei refatorar usando middlewares (por mais que não goste)
@@ -61,14 +61,19 @@ const create = async ({ displayName, email, password, image }) => {
     algorithm: 'HS256',
     };
 
-    const userLogin = await User.findOne({ where: { email } });
+    const token = jwt.sign({ email }, process.env.JWT_SECRET, jwtConfig);
 
-    const token = jwt.sign({ data: userLogin }, process.env.JWT_SECRET, jwtConfig);
+    return { code: 201, token };
+};
 
-    return { code: 201, data: token };
+const findAll = async () => {
+  const findUsers = await User.findAll({ attributes: { exclude: ['password'] } });
+
+  return { code: 200, data: findUsers };
 };
 
 module.exports = {
   login,
   create,
+  findAll,
 };
