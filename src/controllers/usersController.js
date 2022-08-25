@@ -4,11 +4,11 @@ const login = async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    const { code, message, token } = usersService.login({ email, password });
+    const { code, message, data } = await usersService.login({ email, password });
 
     if (message) return res.status(code).json({ message });
 
-    return res.status(code).json(token);
+    return res.status(code).json({ token: data });
   } catch (error) {
     console.log(error.message);
 
