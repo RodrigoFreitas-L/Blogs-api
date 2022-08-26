@@ -14,6 +14,8 @@ app.post('/login', usersController.login);
 app.post('/user', validateUser.validateFields, validateUser.alreadyExists, usersController.create);
 
 app.get('/user', validateJWT, usersController.findAll);
+
+app.get('/user/:id', validateJWT, usersController.findById);
 // ...
 
 // É importante exportar a constante `app`,

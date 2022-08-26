@@ -45,8 +45,25 @@ const findAll = async (req, res) => {
   }
 };
 
+const findById = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const { code, message, data } = await usersService.findById(id); 
+
+    if (message) return res.status(code).json({ message });
+
+    return res.status(code).json(data);
+  } catch (error) {
+    console.log(error.message);
+
+    return res.status(500).json({ message: 'Algo deu errado' });
+  }
+};
+
 module.exports = {
   login,
   create,
   findAll,
+  findById,
 };
