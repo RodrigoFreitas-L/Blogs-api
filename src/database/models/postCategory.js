@@ -1,13 +1,13 @@
 module.exports = (sequelize, DataTypes) => {
   const postCategory = sequelize.define('PostCategory', {
     postId: {
-      allowNull: false,
       type: DataTypes.INTEGER,
+      foreignKey: true,
       primaryKey: true,
     },
     categoryId: {
-      allowNull: false,
       type: DataTypes.INTEGER,
+      foreignKey: true,
       primaryKey: true,
     },
   },
