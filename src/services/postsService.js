@@ -1,4 +1,4 @@
-const { BlogPost, PostCategory, Category, sequelize } = require('../database/models');
+const { BlogPost, PostCategory, Category, User, sequelize } = require('../database/models');
 
 const create = async ({ title, content, categoryIds }, userId) => {
   if (!title || !content || !categoryIds) {
@@ -25,6 +25,25 @@ const create = async ({ title, content, categoryIds }, userId) => {
   return { code, message, data };
 };
 
+// multiple includes:  https://stackoverflow.com/questions/57356008/counting-join-with-sequelize-with-multiple-includes
+
+const findAll = async () => {
+  const findAllPosts = await BlogPost.findAll({ include: [{
+      model: Category,
+      as: 'categories',
+      through: { attributes: [] },
+  },
+  {
+      model: User,
+      as: 'user',
+      attributes: { exclude: ['password'] },
+  },
+] });
+
+  return { code: 200, data: findAllPosts };
+};
+
 module.exports = {
   create,
+  findAll,
 };

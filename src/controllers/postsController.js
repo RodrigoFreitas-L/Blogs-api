@@ -17,6 +17,18 @@ const create = async (req, res) => {
   }
 };
 
+const findAll = async (req, res) => {
+  try {
+    const { code, data } = await postsService.findAll();
+
+    return res.status(code).json(data);
+  } catch (error) {
+    console.log(error.message);
+    return res.status(500).json({ message: 'Algo deu errado' });
+  }
+};
+
 module.exports = {
   create,
+  findAll,
 };
